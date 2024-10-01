@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheme Management</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+        
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        button {
+            padding: 5px 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Scheme Applications</h1>
+        <nav>
+            <a href="/Admin_Pages/Dashboard.html">Dashboard</a>
+            <a href="#">Logout</a>
+        </nav>
+    </header>
+
+    <section>
+        <table id="applicationTable">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Scheme ID</th>
+                    <th>Scheme Name</th>
+                    <th>Company Name</th>
+                    <th>Contact Number</th>
+                    <th>Contact Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Scheme applications will be dynamically inserted here from the backend -->
+            </tbody>
+        </table>
+    </section>
+
+    <script>
+        // Fetch scheme applications from the backend
+        fetch('/api/get_scheme_applications')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const tbody = document.querySelector("#applicationTable tbody");
+                data.forEach(application => {
+                    const tr = document.createElement("tr");
+
+                    tr.innerHTML = `
+                        <td>${application.userId}</td>
+                        <td>${application.schemeId}</td>
+                        <td>${application.schemeName}</td>
+                        <td>${application.companyName}</td>
+                        <td>${application.contactNumber}</td>
+                        <td>${application.email}</td>
+                        <td>
+                            <button onclick="approveApplication('${application.userId}', '${application.schemeId}')">Approve</button>
+                            <button onclick="disapproveApplication('${application.userId}', '${application.schemeId}')">Disapprove</button>
+                        </td>
+                    `;
+
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching applications:', error);
+                alert('Failed to load applications. Please try again later.');
+            });
+
+        // Approve scheme application
+        function approveApplication(userId, schemeId) {
+            fetch(`/api/approve_scheme`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                            userId,
+                            schemeId,
+                            status: 'approved'
+                        }) // Send approval status
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload(); // Reload the page after approval
+                })
+                .catch(error => {
+                    console.error('Error approving application:', error);
+                    alert('Failed to approve application. Please try again later.');
+                });
+        }
+
+        // Disapprove scheme application
+        function disapproveApplication(userId, schemeId) {
+            fetch(`/api/disapprove_scheme`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                            userId,
+                            schemeId,
+                            status: 'disapproved'
+                        }) // Send disapproval status
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload(); // Reload the page after disapproval
+                })
+                .catch(error => {
+                    console.error('Error disapproving application:', error);
+                    alert('Failed to disapprove application. Please try again later.');
+                });
+        }
+    </script>
+</body>
+
+</html>

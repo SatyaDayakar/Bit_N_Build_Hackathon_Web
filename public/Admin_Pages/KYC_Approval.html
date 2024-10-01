@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KYC Approval</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+        
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        button {
+            padding: 5px 10px;
+            margin: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>KYC Approval List</h1>
+        <nav>
+            <a href="../dashboard_admin.html">Dashboard</a>
+        </nav>
+    </header>
+
+    <section>
+        <table id="kycTable">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Company Name</th>
+                    <th>Documents</th>
+                    <th>Approve</th>
+                    <th>Disapprove</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- KYC submissions will be dynamically inserted here from the backend -->
+            </tbody>
+        </table>
+    </section>
+
+    <script>
+        // Fetch KYC submissions from backend
+        fetch('/api/get_kyc_submissions')
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.querySelector("#kycTable tbody");
+                data.forEach(user => {
+                    const tr = document.createElement("tr");
+
+                    tr.innerHTML = `
+                        <td>${user.user_id}</td>
+                        <td>${user.username}</td>
+                        <td>${user.company_name}</td>
+                        <td>
+                            <a href="/api/view_document/${user.user_id}/labour_license">Labour License</a><br>
+                            <a href="/api/view_document/${user.user_id}/agreement_bond">Agreement Bond</a><br>
+                            <a href="/api/view_document/${user.user_id}/bank_details">Bank Details</a>
+                        </td>
+                        <td><button onclick="approveKYC('${user.user_id}')">Approve</button></td>
+                        <td><button onclick="disapproveKYC('${user.user_id}')">Disapprove</button></td>
+                    `;
+
+                    tbody.appendChild(tr);
+                });
+            });
+
+        // Approve KYC
+        function approveKYC(userId) {
+            fetch(`/api/approve_kyc/${userId}`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload(); // Reload the page after approval
+                });
+        }
+
+        // Disapprove KYC
+        function disapproveKYC(userId) {
+            fetch(`/api/disapprove_kyc/${userId}`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload(); // Reload the page after disapproval
+                });
+        }
+    </script>
+</body>
+
+</html>

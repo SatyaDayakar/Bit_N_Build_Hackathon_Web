@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <!-- HTTP 1.1 -->
+    <meta http-equiv="Pragma" content="no-cache" />
+    <!-- HTTP 1.0 -->
+    <meta http-equiv="Expires" content="0" />
+    <!-- Proxies -->
+    <script>
+        // Clear input fields when the page loads
+        window.onload = function() {
+            document.getElementById('user_id').value = '';
+            document.getElementById('user_password').value = '';
+            document.getElementById('admin_id').value = '';
+            document.getElementById('admin_password').value = '';
+            document.getElementById('new_user_id').value = '';
+            document.getElementById('new_username').value = '';
+            document.getElementById('new_user_password').value = '';
+            document.getElementById('confirm_password').value = '';
+        };
+    </script>
+</head>
+
+<body>
+    <header id="header">
+        <h1>Startup KYC</h1>
+        <nav id="options">
+            <a href="#home">Home</a>
+            <a href="#user-login">User Login</a>
+            <a href="#admin-login">Admin Login</a>
+        </nav>
+    </header>
+
+    <section id="home">
+        <div id="home_section">
+            <div class="home-content">
+                <h1 id="Name">KYC Startup</h1>
+                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veritatis iusto labore cum necessitatibus sit ipsam, vel quo at aperiam quae quia porro maiores aliquam harum! Possimus laudantium quas dolores delectus.</p>
+                <div class="btn-box">
+                    <a href="#user-login">Get Start</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="sectionpage">
+        <div id="user-login" class="LoginBox">
+            <!-- User Login Form -->
+            <div class="login-form">
+                <h3>User Login</h3>
+                <form action="/login_user" method="POST">
+                    <label for="user_id">User ID:</label><br>
+                    <input type="text" id="user_id" name="user_id" required><br>
+                    <label for="user_password">Password:</label><br>
+                    <input type="password" id="user_password" name="password" required><br>
+                    <input type="submit" value="Login as User">
+                    <a href="#register-user">Create New User</a>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="sectionpage">
+        <div id="admin-login" class="LoginBox">
+            <!-- Admin Login Form -->
+            <div class="login-form">
+                <h3>Admin Login</h3>
+                <form action="/login_admin" method="POST">
+                    <label for="admin_id">Admin ID:</label><br>
+                    <input type="text" id="admin_id" name="admin_id" required><br>
+                    <label for="admin_password">Password:</label><br>
+                    <input type="password" id="admin_password" name="password" required><br>
+                    <input type="submit" value="Login as Admin">
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="sectionpage">
+        <div id="register-user" class="LoginBox">
+            <!-- New User Registration Form -->
+            <div class="login-form">
+                <h3>New User Registration</h3>
+                <form action="/register_user" method="POST">
+                    <label for="new_user_id">User ID:</label><br>
+                    <input type="text" id="new_user_id" name="user_id" required><br>
+                    <label for="new_username">User Name:</label><br>
+                    <input type="text" id="new_username" name="username" required><br>
+                    <label for="new_user_password">Password:</label><br>
+                    <input type="password" id="new_user_password" name="password" required><br>
+                    <label for="confirm_password">Confirm Password:</label><br>
+                    <input type="password" id="confirm_password" name="confirm_password" required><br>
+                    <input type="submit" value="Register New User">
+                    <a href="#user-login">Login</a>
+                </form>
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>

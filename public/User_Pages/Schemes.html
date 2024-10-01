@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Schemes</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+        
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        button {
+            padding: 5px 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Available Schemes</h1>
+        <nav>
+            <a href="/User_Pages/Dashboard.html">Dashboard</a>
+            <a href="#">Logout</a>
+        </nav>
+    </header>
+
+    <section>
+        <table id="schemeTable">
+            <thead>
+                <tr>
+                    <th>Scheme ID</th>
+                    <th>Scheme Name</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Scheme details will be dynamically inserted here from the backend -->
+            </tbody>
+        </table>
+    </section>
+
+    <script>
+        // Fetch schemes from the backend
+        fetch('/api/get_schemes')
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.querySelector("#schemeTable tbody");
+                data.forEach(scheme => {
+                    const tr = document.createElement("tr");
+
+                    tr.innerHTML = `
+                        <td>${scheme.scheme_id}</td>
+                        <td>${scheme.name}</td>
+                        <td>${scheme.description}</td>
+                        <td><button onclick="applyForScheme('${scheme.scheme_id}')">Apply</button></td>
+                    `;
+
+                    tbody.appendChild(tr);
+                });
+            });
+
+        // Apply for a scheme
+        function applyForScheme(schemeId) {
+            fetch(`/api/apply_scheme/${schemeId}`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    // Optionally disable the Apply button after applying
+                    document.querySelector(`button[onclick="applyForScheme('${schemeId}')"]`).disabled = true;
+                });
+        }
+    </script>
+</body>
+
+</html>
