@@ -45,7 +45,6 @@ app.get('/', (req, res) => {
     }
 
     res.setHeader('Cache-Control', 'no-store');
-    // res.sendFile(__dirname + '/public/login.html' + '/#home');
     res.redirect('/login.html#home');
 });
 
