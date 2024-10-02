@@ -6,28 +6,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="admin_dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
     <header>
-        <h1>Welcome....</h1>
-        <h2>User Name</h2>
+        <h1>Welcome, Admin</h1>
         <nav id="options">
-            <a href="Admin_Pages/KYC_Approval.html">KYC Approval</a>
-            <a href="Admin_Pages/Scheme_Management.html">Scheme Management</a>
-            <a href="/logout">Logout</a>
+            <a href="Admin_Pages/KYC_Approval.html"><i class="fas fa-user-check"></i> KYC Approval</a>
+            <a href="Admin_Pages/Scheme_Management.html"><i class="fas fa-tasks"></i> Scheme Management</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </nav>
     </header>
 
-    <div id="Startup_Details">
-        <h3>Startup Details</h3>
-        <p>
-            I should add a display list of the startup details
-        </p>
+    <!-- Summary cards with icons and images -->
+    <div class="dashboard-section">
+        <div class="card">
+            <img src="https://via.placeholder.com/100" alt="Total Users">
+            <h4>Total Users</h4>
+            <p><i class="fas fa-users"></i> 500</p>
+        </div>
+        <div class="card">
+            <img src="https://via.placeholder.com/100" alt="Active Schemes">
+            <h4>Active Schemes</h4>
+            <p><i class="fas fa-briefcase"></i> 15</p>
+        </div>
+        <div class="card">
+            <img src="https://via.placeholder.com/100" alt="Pending KYC Approvals">
+            <h4>Pending KYC Approvals</h4>
+            <p><i class="fas fa-id-card"></i> 12</p>
+        </div>
+        <div class="card">
+            <img src="https://via.placeholder.com/100" alt="Total Startups">
+            <h4>Total Startups</h4>
+            <p><i class="fas fa-lightbulb"></i> 200</p>
+        </div>
     </div>
 
-    <!-- for this i can maybe change this into divs so that i can make it look good -->
+    <!-- Startup details section -->
+    <div id="Startup_Details">
+        <h3><i class="fas fa-building"></i> Startup Details</h3>
+        <p>A comprehensive list of all the registered startups in the system will be displayed here.</p>
+    </div>
+
+    <!-- Applications Progress Table with progress bars -->
     <div id="Progress">
+        <h3><i class="fas fa-chart-line"></i> Application Progress</h3>
         <table>
             <tr>
                 <th>Total Applications</th>
@@ -37,12 +61,70 @@
             </tr>
             <tr>
                 <td>100</td>
-                <td>40</td>
-                <td>40</td>
-                <td>20</td>
+                <td>40
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 40%;"></div>
+                    </div>
+                </td>
+                <td>40
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 40%;"></div>
+                    </div>
+                </td>
+                <td>20
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 20%;"></div>
+                    </div>
+                </td>
             </tr>
         </table>
     </div>
+
+    <!-- Recent Activities with icons -->
+    <div id="Recent_Activities">
+        <h3><i class="fas fa-history"></i> Recent Activities</h3>
+        <ul>
+            <li><i class="fas fa-user-edit"></i> User JohnDoe updated their profile.</li>
+            <li><i class="fas fa-file-upload"></i> New KYC application submitted by Startup XYZ.</li>
+            <li><i class="fas fa-wrench"></i> Scheme "Tech Growth" has been updated.</li>
+            <li><i class="fas fa-check"></i> Admin approved the KYC of Startup ABC.</li>
+        </ul>
+    </div>
+
+    <!-- Notifications with icons -->
+    <div id="Notifications">
+        <h3><i class="fas fa-bell"></i> Notifications</h3>
+        <ul>
+            <li><i class="fas fa-exclamation-circle"></i> Reminder: KYC pending for 3 days.</li>
+            <li><i class="fas fa-envelope-open"></i> New Scheme submissions are open for review.</li>
+            <li><i class="fas fa-server"></i> Server maintenance scheduled for next weekend.</li>
+        </ul>
+    </div>
+
+    <!-- Statistics/Charts Section with placeholder images for charts -->
+    <div id="Statistics">
+        <h3><i class="fas fa-chart-bar"></i> Statistics</h3>
+        <div class="dashboard-section">
+            <div class="card">
+                <img src="https://via.placeholder.com/100" alt="Monthly Applications">
+                <h4>Monthly Applications</h4>
+                <p>85</p>
+                <!-- Placeholder for chart -->
+                <img src="https://via.placeholder.com/300x150" alt="Monthly Applications Chart">
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/100" alt="Growth Rate">
+                <h4>Growth Rate</h4>
+                <p>10% increase this month</p>
+                <!-- Placeholder for chart -->
+                <img src="https://via.placeholder.com/300x150" alt="Growth Rate Chart">
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional: You can use a JS library like Chart.js for dynamic charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </body>
 
 </html>

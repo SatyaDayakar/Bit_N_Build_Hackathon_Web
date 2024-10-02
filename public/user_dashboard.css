@@ -1,0 +1,202 @@
+/* Body styling */
+
+body {
+    background-color: #e3e1e1;
+    font-family: 'Arial', sans-serif;
+    color: #333333;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Header styling */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: #e3e1e1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    font-size: 2rem;
+    margin: 0;
+    color: #333333;
+    letter-spacing: 1px;
+}
+
+nav a {
+    margin: 0 20px;
+    text-decoration: none;
+    color: #007BFF;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+
+/* Main sections */
+
+#Application_Status,
+#KYC_Verified,
+#Progress {
+    margin: 30px auto;
+    width: 90%;
+    padding: 20px;
+    background-color: #ecf0f1;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #2980b9;
+}
+
+p {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+}
+
+
+/* Status indicators */
+
+.status {
+    display: inline-block;
+    padding: 5px 10px;
+    font-weight: bold;
+    border-radius: 20px;
+    color: #fff;
+}
+
+.status-approved {
+    background-color: #27ae60;
+}
+
+.status-pending {
+    background-color: #f39c12;
+}
+
+.status-rejected {
+    background-color: #e74c3c;
+}
+
+
+/* Chart container */
+
+
+/* Chart container */
+
+
+/* Chart container */
+
+
+/* Chart container */
+
+#Progress {
+    text-align: center;
+    margin: 20px auto;
+    /* Adjust as needed */
+    width: 70%;
+    /* Keep the width or adjust as necessary */
+    padding: 5px;
+    /* Reduced padding */
+    background-color: #ecf0f1;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    /* Reduced margin-bottom to minimize space below the heading */
+    color: #2980b9;
+}
+
+
+/* Adjusted canvas styling */
+
+canvas {
+    margin: 0 auto;
+    /* Center the canvas */
+    margin-top: 5px;
+    /* Reduced margin-top for the canvas */
+    width: 80%;
+    /* Adjust the width of the canvas */
+    max-width: 500px;
+    /* Set a max width to prevent it from becoming too large */
+    height: auto;
+    /* Maintain aspect ratio */
+    display: block;
+    /* Make canvas a block element for centering */
+}
+
+
+/* Footer styling */
+
+footer {
+    background-color: #2C3E50;
+    padding: 20px;
+    text-align: center;
+    color: #ecf0f1;
+    font-size: 0.9rem;
+}
+
+
+/* Button styles */
+
+button {
+    display: inline-block;
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border-radius: 25px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+
+/* Media Queries */
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    nav {
+        margin-top: 15px;
+    }
+    nav a {
+        margin: 0 10px;
+    }
+    h1 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    #Application_Status,
+    #KYC_Verified,
+    #Progress {
+        width: 95%;
+    }
+    .dashboard-section .card {
+        width: 100%;
+    }
+    button {
+        width: 100%;
+    }
+}

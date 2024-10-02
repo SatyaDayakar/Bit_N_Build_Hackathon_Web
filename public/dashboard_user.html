@@ -6,37 +6,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
     <link rel="stylesheet" href="user_dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Inline styles for demonstration, consider moving to your CSS file */
+        
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        
+        .card:hover {
+            transform: scale(1.02);
+        }
+        
+        .notification {
+            background-color: #f39c12;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .notification i {
+            margin-right: 5px;
+        }
+    </style>
 </head>
 
 <body>
     <header>
-        <h1>Welcome....</h1>
-        <h2>User Name</h2>
+        <h1>Welcome...</h1>
         <nav id="options">
-            <a href="User_Pages/KYC_Submit.html">KYC Submission</a>
-            <a href="User_Pages/Report_Submit.html">Report Submission</a>
-            <a href="User_Pages/Schemes.html">Schemes</a>
-            <a href="/logout">Logout</a>
+            <a href="User_Pages/KYC_Submit.html"><i class="fas fa-file-upload"></i> KYC Submission</a>
+            <a href="User_Pages/Report_Submit.html"><i class="fas fa-file-alt"></i> Report Submission</a>
+            <a href="User_Pages/Schemes.html"><i class="fas fa-briefcase"></i> Schemes</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </nav>
     </header>
-    <div id="Application_Status">
-        <h3>Application Status</h3>
+
+    <!-- Notifications Section -->
+    <div class="notification">
+        <i class="fas fa-bell"></i> You have 3 new notifications!
+    </div>
+
+    <!-- Application Status -->
+    <div id="Application_Status" class="card">
+        <h3><i class="fas fa-info-circle"></i> Application Status</h3>
         <p>
-            I should add a application status indicator
+            <i class="fas fa-check-circle"></i> Your latest application has been approved.
         </p>
     </div>
-    <div id="KYC_Verified">
-        <h3>KYC Verified</h3>
+
+    <!-- KYC Verified Status -->
+    <div id="KYC_Verified" class="card">
+        <h3><i class="fas fa-id-card"></i> KYC Status</h3>
         <p>
-            i should make this updateable like if the kyc is updated then approved in green, pending in yellow, rejected in red.
+            <span class="status status-approved"><i class="fas fa-check-circle"></i> Approved</span>
         </p>
     </div>
-    <div id="Progress">
-        <h3>Last Month Progress</h3>
-        <p>
-            i should include pie chart showing the last month turn overs details etc.
-        </p>
+
+    <!-- Last Month's Progress with a bar chart -->
+    <div id="Progress" class="card">
+        <h3><i class="fas fa-chart-bar"></i> Last Month's Progress</h3>
+        <canvas id="progressChart"></canvas>
     </div>
+
+    <!-- Optional: JS to render the bar chart using Chart.js -->
+    <script>
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        const progressChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Sales', 'Revenue', 'Expenses'],
+                datasets: [{
+                    label: 'Last Month Progress',
+                    data: [40, 30, 30],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(255, 206, 86, 0.7)',
+                        'rgba(255, 99, 132, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
