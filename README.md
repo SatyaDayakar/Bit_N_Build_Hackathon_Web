@@ -46,7 +46,7 @@ To run this project locally, follow these steps:
 
 5. Start the application:
    ```bash
-   npm start
+   node index.js
    ```
 
 ## Usage
