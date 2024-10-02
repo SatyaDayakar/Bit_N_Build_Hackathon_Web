@@ -70,3 +70,45 @@ button {
 button:hover {
     background-color: #218838;
 }
+
+
+/* Additional styles for images */
+
+.decorative-img {
+    display: block;
+    margin: 20px auto;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.info-section img {
+    display: block;
+    margin: 0 auto 15px;
+    width: 100px;
+    height: auto;
+}
+
+.info-section {
+    background-color: #e3e1e1;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+.info-section h2 {
+    color: #cece06f3;
+}
+
+.info-section p {
+    font-size: 16px;
+    color: #555;
+}
+
+.info-section i {
+    font-size: 50px;
+    color: #3498db;
+    margin-top: 10px;
+}
