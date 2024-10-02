@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const multer = require('multer');
+const nodemailer = require('nodemailer');
 
 const app = express();
 
@@ -30,7 +31,7 @@ db.connect(err => {
 });
 
 // Configure multer for file uploads
-const storage = multer.memoryStorage(); // Use memory storage for simplicity
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Serve the login page
@@ -44,6 +45,13 @@ app.get('/', (req, res) => {
     }
 
     res.setHeader('Cache-Control', 'no-store');
+    // res.sendFile(__dirname + '/public/login.html' + '/#home');
+    res.redirect('/login.html#home');
+});
+
+// Serve the login.html file
+app.get('/login.html', (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
     res.sendFile(__dirname + '/public/login.html');
 });
 
@@ -56,7 +64,14 @@ app.post('/login_user', (req, res) => {
         if (result.length > 0) {
             const user = result[0];
             if (bcrypt.compareSync(password, user.password)) {
-                req.session.user = { id: user.id, role: 'user' };
+                req.session.user = {
+                    id: user.id,
+                    user_id: user.user_id,
+                    role: 'user',
+                    company_name: user.company_name,
+                    contact_number: user.contact,
+                    contact_email: user.email
+                };
                 return res.redirect('/dashboard_user');
             }
         }
@@ -179,8 +194,13 @@ app.post('/submit_kyc', upload.fields([
     });
 });
 
-// Report Submission
 app.post('/submit_report', upload.single('report_document'), (req, res) => {
+    console.log('File:', req.file); // Debugging line
+
+    if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+    }
+
     if (!req.session.user || req.session.user.role !== 'user') {
         return res.status(403).send('You are not authorized to submit reports.');
     }
@@ -204,15 +224,14 @@ app.post('/submit_report', upload.single('report_document'), (req, res) => {
     });
 });
 
+
 // Logout Route
 app.get('/logout', (req, res) => {
-    // Destroy the session to log the user out
     req.session.destroy(err => {
         if (err) {
             console.error('Error destroying session:', err);
             return res.status(500).send('Error logging out');
         }
-        // Redirect to the login page after successful logout
         res.redirect('/#home');
     });
 });
@@ -258,7 +277,7 @@ app.post('/api/disapprove_kyc/:userId', (req, res) => {
     });
 });
 
-// View Document Endpoint (for downloading files)
+// View Document Endpoint
 app.get('/api/view_document/:userId/:documentType', (req, res) => {
     const { userId, documentType } = req.params;
     const query = `SELECT ${documentType} FROM users WHERE user_id = ?`;
@@ -266,15 +285,14 @@ app.get('/api/view_document/:userId/:documentType', (req, res) => {
     db.query(query, [userId], (err, results) => {
         if (err || results.length === 0) {
             console.error('Error fetching document:', err);
-            return res.status(500).send('Document not found');
+            return res.status(500).send('Error fetching document');
         }
+
         const document = results[0][documentType];
-        res.setHeader('Content-Type', 'application/octet-stream');
-        res.setHeader('Content-Disposition', `attachment; filename=${documentType}.pdf`);
+        res.contentType('application/pdf');
         res.send(document);
     });
 });
-
 
 // Get available schemes
 app.get('/api/get_schemes', (req, res) => {
@@ -288,111 +306,137 @@ app.get('/api/get_schemes', (req, res) => {
         res.json(results);
     });
 });
+
+
 // Apply for a scheme
 app.post('/api/apply_scheme/:schemeId', (req, res) => {
+    // Ensure user is logged in and has the correct role
     if (!req.session.user || req.session.user.role !== 'user') {
         return res.status(403).send('Unauthorized');
     }
 
-    const userId = req.session.user.user_id; // Ensure this matches your session structure
+    // Automatically fetch company name, contact number, and email from the session
+    const userId = req.session.user.user_id;
     const { schemeId } = req.params;
-    const schemeName = req.body.schemeName; // Expect scheme name in request body
+    const companyName = req.session.user.company_name; // Fetch from session
+    const contactNumber = req.session.user.contact_number; // Fetch from session
+    const contactEmail = req.session.user.contact_email; // Fetch from session
 
-    // Capture other user details from request body
-    const companyName = req.body.companyName;
-    const contactNumber = req.body.contactNumber;
-    const email = req.body.contactEmail;
+    // Debug: Log the data being sent to the database
+    console.log('Applying for scheme with the following details:');
+    console.log(`User ID: ${userId}, Scheme ID: ${schemeId}, Company Name: ${companyName}, Contact Number: ${contactNumber}, Contact Email: ${contactEmail}`);
 
-    // Query to insert the application into the database
-    const applicationQuery = `
-        INSERT INTO scheme_applications (user_id, scheme_id, scheme_name, company_name, contact_number, contact_email) 
-        VALUES (?, ?, ?, ?, ?, ?)`;
+    // Check if all required details are present
+    if (!companyName || !contactNumber || !contactEmail) {
+        return res.status(400).send('All fields are required');
+    }
 
-    db.query(applicationQuery, [userId, schemeId, schemeName, companyName, contactNumber, email], (err, result) => {
+    // Query to fetch scheme details
+    const schemeQuery = `SELECT name FROM schemes WHERE scheme_id = ${schemeId}`;
+
+    db.query(schemeQuery, (err, results) => {
         if (err) {
-            console.error('Error applying for scheme:', err);
-            return res.status(500).send('Error applying for the scheme');
+            console.error('Error fetching scheme details:', err);
+            return res.status(500).send(`Error fetching scheme details: ${err.message}`);
         }
 
-        res.json({ message: 'Successfully applied for the scheme', applicationId: result.insertId });
+        if (results.length === 0) {
+            return res.status(404).send('Scheme not found');
+        }
+
+        const schemeName = results[0].name; // Get the scheme name from the results
+
+        console.log(`SchemeName: ${schemeName}`);
+
+        // Query to insert the application into the database
+        const applicationQuery = `
+        INSERT INTO scheme_applications 
+        (user_id, scheme_id, scheme_name, company_name, contact_number, contact_email, status, created_at) 
+        VALUES (?, ?, ?, ?, ?, ?, 'pending', NOW())`;
+
+        // Execute the query with parameterized inputs
+        db.query(applicationQuery, [userId, schemeId, schemeName, companyName, contactNumber, contactEmail], (err, result) => {
+            if (err) {
+                console.error('Error applying for scheme:', err); // Log the entire error
+                return res.status(500).send(`Error applying for the scheme: ${err.message}`); // Return a more descriptive error message
+            }
+
+            console.log('Application successfully added:', result); // Log result for confirmation
+            res.json({ message: 'Successfully applied for the scheme', applicationId: result.insertId });
+        });
     });
 });
 
-// Get scheme applications (for admin view)
-app.get('/api/get_scheme_applications', (req, res) => {
-    const query = `
-        SELECT 
-            u.user_id AS userId, 
-            sa.application_id AS applicationId,
-            sa.scheme_id AS schemeId, 
-            sa.scheme_name AS schemeName, 
-            u.company_name AS companyName,
-            u.contact_number AS contactNumber,
-            u.contact_email AS email,
-            sa.status AS status
-        FROM 
-            scheme_applications sa 
-        JOIN 
-            users u ON sa.user_id = u.user_id`; // Join with users table to get user details
+
+// Admin: Get all scheme applications
+app.get('/api/get_applications', (req, res) => {
+    // Ensure user is logged in and has admin role
+    if (!req.session.user || req.session.user.role !== 'admin') {
+        return res.status(403).send('Unauthorized');
+    }
+
+    const query = `SELECT * FROM scheme_applications`;
 
     db.query(query, (err, results) => {
         if (err) {
-            console.error('Error fetching scheme applications:', err);
-            return res.status(500).json({ message: 'Error fetching scheme applications' });
+            console.error('Error fetching applications:', err);
+            return res.status(500).send('Error fetching applications');
         }
+
         res.json(results);
     });
 });
 
-// Approve scheme application
-app.post('/api/approve_scheme/:applicationId', (req, res) => {
-    const { applicationId } = req.params;
+// Admin: Approve an application
+app.post('/api/manage_applications/approve/:applicationId', (req, res) => {
+    // Ensure user is logged in and has admin role
+    if (!req.session.user || req.session.user.role !== 'admin') {
+        return res.status(403).send('Unauthorized');
+    }
 
-    // Query to update the application status to "approved"
-    const query = 'UPDATE scheme_applications SET status = "approved" WHERE application_id = ?';
+    const applicationId = req.params.applicationId;
+    const status = 'accepted'; // Set status to accepted
 
-    db.query(query, [applicationId], (err, result) => {
+    const updateQuery = `UPDATE scheme_applications SET status = ? WHERE application_id = ?`;
+
+    db.query(updateQuery, [status, applicationId], (err) => {
         if (err) {
-            console.error('Error approving scheme application:', err);
-            return res.status(500).json({ message: 'Error approving scheme application' });
+            console.error('Error approving application:', err);
+            return res.status(500).send('Error approving application');
         }
 
-        // Check if any rows were affected
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Application not found' });
-        }
-
-        // Return a success message along with the updated application details
-        res.json({ message: 'Scheme application approved', applicationId });
+        // Respond with success message
+        res.json({ message: 'Application approved successfully' });
     });
 });
 
-// Disapprove scheme application
-app.post('/api/disapprove_scheme/:applicationId', (req, res) => {
-    const { applicationId } = req.params;
+// Admin: Disapprove an application
+app.post('/api/manage_applications/disapprove/:applicationId', (req, res) => {
+    // Ensure user is logged in and has admin role
+    if (!req.session.user || req.session.user.role !== 'admin') {
+        return res.status(403).send('Unauthorized');
+    }
 
-    // Query to update the application status to "disapproved"
-    const query = 'UPDATE scheme_applications SET status = "disapproved" WHERE application_id = ?';
+    const applicationId = req.params.applicationId;
+    const status = 'rejected'; // Set status to rejected
 
-    db.query(query, [applicationId], (err, result) => {
+    const updateQuery = `UPDATE scheme_applications SET status = ? WHERE application_id = ?`;
+
+    db.query(updateQuery, [status, applicationId], (err) => {
         if (err) {
-            console.error('Error disapproving scheme application:', err);
-            return res.status(500).json({ message: 'Error disapproving scheme application' });
+            console.error('Error disapproving application:', err);
+            return res.status(500).send('Error disapproving application');
         }
 
-        // Check if any rows were affected
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Application not found' });
-        }
-
-        // Return a success message along with the updated application details
-        res.json({ message: 'Scheme application disapproved', applicationId });
+        // Respond with success message
+        res.json({ message: 'Application rejected successfully' });
     });
 });
+
 
 
 // Start Server
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}/#home`);
+    console.log(`Server running on http://localhost:${PORT}/`);
 });

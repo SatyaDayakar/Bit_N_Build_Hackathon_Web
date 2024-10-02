@@ -5,33 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KYC Approval</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        table,
-        th,
-        td {
-            border: 1px solid black;
-        }
-        
-        th,
-        td {
-            padding: 10px;
-            text-align: left;
-        }
-        
-        th {
-            background-color: #f2f2f2;
-        }
-        
-        button {
-            padding: 5px 10px;
-            margin: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="kyc_approval.css">
 </head>
 
 <body>
@@ -78,8 +52,8 @@
                             <a href="/api/view_document/${user.user_id}/agreement_bond">Agreement Bond</a><br>
                             <a href="/api/view_document/${user.user_id}/bank_details">Bank Details</a>
                         </td>
-                        <td><button onclick="approveKYC('${user.user_id}')">Approve</button></td>
-                        <td><button onclick="disapproveKYC('${user.user_id}')">Disapprove</button></td>
+                        <td><button class="approve" onclick="approveKYC('${user.user_id}')">Approve</button></td>
+                        <td><button class="disapprove" onclick="disapproveKYC('${user.user_id}')">Disapprove</button></td>
                     `;
 
                     tbody.appendChild(tr);

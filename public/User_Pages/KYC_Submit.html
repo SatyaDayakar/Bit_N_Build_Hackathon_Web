@@ -5,9 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KYC Submission</title>
+    <link rel="stylesheet" href="kyc_submit.css">
 </head>
 
 <body>
+
+    <header>
+        <h1>KYC Application Submission</h1>
+        <nav>
+            <a href="../dashboard_user.html">Dashboard</a>
+        </nav>
+    </header>
+
     <form action="/submit_kyc" method="POST" enctype="multipart/form-data">
         <label for="company_name">Company Full Name: </label><br>
         <input type="text" id="company_name" name="company_name" required><br>
@@ -58,7 +67,7 @@
         <label for="bank_details">Bank Details:</label><br>
         <input type="file" id="bank_details" name="bank_details" required><br>
 
-        <input style="color: blue;" type="submit" value="SUBMIT">
+        <input type="submit" value="SUBMIT">
     </form>
 </body>
 
