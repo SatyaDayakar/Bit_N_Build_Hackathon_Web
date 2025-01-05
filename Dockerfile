@@ -1,23 +1,20 @@
-# Use the official Node.js runtime as the base image
+# Use official Node.js image from the Docker Hub
 FROM node:20
 
-# Set the working directory in the container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the package.json and package-lock.json files to the container
+# Copy package.json and package-lock.json files
 COPY package*.json ./
 
-# Install only production dependencies (ignores devDependencies like nodemon)
-RUN npm install --only=production
+# Install dependencies
+RUN npm install
 
-# Copy the entire application code to the container
+# Copy the rest of the application code
 COPY . .
 
-# Expose the port your app listens on (default 3000 for Express)
+# Expose the port the app will run on
 EXPOSE 3000
 
-# Set the environment variable to production
-ENV NODE_ENV=production
-
 # Command to run the application
-CMD ["npm", "start"]
+CMD ["node", "index.js"]
