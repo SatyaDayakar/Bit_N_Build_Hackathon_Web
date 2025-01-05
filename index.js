@@ -19,10 +19,10 @@ app.use(session({
 
 // MySQL Connection
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'adam123',
-    database: 'database_website'
+    host: process.env.MYSQL_HOST,       // Railway provides this variable
+    user: process.env.MYSQL_USER,       // Your MySQL username
+    password: process.env.MYSQL_PASSWORD, // Your MySQL password
+    database: process.env.MYSQL_DATABASE  // Your MySQL database name
 });
 
 db.connect(err => {
