@@ -19,7 +19,7 @@ app.use(session({
 
 // MySQL Connection
 const db = mysql.createConnection({
-    host: '14.139.177.158',
+    host: 'localhost',
     user: 'root',
     password: 'adam123',
     database: 'database_website'
