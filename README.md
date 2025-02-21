@@ -63,10 +63,8 @@ Contributions are welcome! To contribute:
 4. Push to the branch
 5. Open a Pull Request
 
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
 ## Acknowledgements
 
-- [List any resources, inspirations, or collaborators]
+- AdamKoda2306
+- mahendrabudda
+- SanjayKalla8542
