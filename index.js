@@ -447,7 +447,3 @@ const HOST = '0.0.0.0';  // Bind to all network interfaces
 app.listen(PORT, HOST, () => {
     console.log(`Server running on http://${HOST}:${PORT}/`);
 });
-
-// Increase timeouts to avoid connection reset errors
-server.keepAliveTimeout = 120000;  // 120 seconds
-server.headersTimeout = 120000;    // 120 seconds
