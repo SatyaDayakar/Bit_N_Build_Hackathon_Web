@@ -66,5 +66,5 @@ Contributions are welcome! To contribute:
 ## Acknowledgements
 
 - AdamKoda2306
-- mahendrabudda
+- SatyaDayakar
 - SanjayKalla8542
